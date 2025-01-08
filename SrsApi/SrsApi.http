@@ -1,0 +1,6 @@
+@SrsApi_HostAddress = http://localhost:5010
+
+GET {{SrsApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
