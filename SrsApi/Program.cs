@@ -14,6 +14,7 @@ options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbCon
 builder.Services.AddAuthorization();
 
 builder.Services.AddIdentityApiEndpoints<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 // Add services to the container.
@@ -51,6 +52,8 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddScoped<UserManager<IdentityUser>, SrsApiUserManager<IdentityUser>>();
 builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
+
+builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
 
 var app = builder.Build();
 
