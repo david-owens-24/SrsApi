@@ -21,12 +21,14 @@ namespace SrsApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBaseService<SrsItemLevel> _srsItemLevelService;
+        private readonly ISrsItemService _srsItemService;
         private readonly IConfiguration _appsettings;
 
-        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, IConfiguration appsettings)
+        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, ISrsItemService srsItemService, IConfiguration appsettings)
         {
             _context = context;
             _srsItemLevelService = srsItemLevelService;
+            _srsItemService = srsItemService;
             _appsettings = appsettings;
         }
 
@@ -165,13 +167,16 @@ namespace SrsApi.Controllers
                 {
                     return NotFoundResponse();
                 }
+
+                if((await _srsItemService.GetAll(x=>x.Level.UID == uid, take: 1)).Any())
+                {
+                    return ErrorResponse("SrsItemLevel has existing SrsItems, these must be deleted before the SrsItemLevel can be deleted.", System.Net.HttpStatusCode.BadRequest);
+                }
             } 
             catch (Exception ex)
             {
                 return ErrorResponseFromException(ex);
-            }            
-
-            //TODO: if there are any SrsItems with this level, then don't allow the delete (need to create the SrsItemService first)
+            }
 
             try
             {
