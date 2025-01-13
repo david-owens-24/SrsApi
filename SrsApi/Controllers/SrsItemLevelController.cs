@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SrsApi.Classes.ApiResponses;
 using SrsApi.Classes.SrsItemLevelController;
 using SrsApi.DbContext;
 using SrsApi.Interfaces;
@@ -16,50 +17,83 @@ namespace SrsApi.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(Roles = "Administrator")]
-    public class SrsItemLevelController : ControllerBase
+    public class SrsItemLevelController : BaseController
     {
         private readonly ApplicationDbContext _context;
         private readonly IBaseService<SrsItemLevel> _srsItemLevelService;
+        private readonly IConfiguration _appsettings;
 
-        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService)
+        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, IConfiguration appsettings)
         {
             _context = context;
             _srsItemLevelService = srsItemLevelService;
+            _appsettings = appsettings;
         }
 
         // GET: api/SrsItemLevel
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SrsItemLevel>>> GetSrsItemLevels(bool includeDeleted = false)
+        public async Task<ActionResult<SrsApiResponse>> GetSrsItemLevels(int skip = 0, int take = 0, bool includeDeleted = false)
         {
-            return (await _srsItemLevelService.GetAll(includeDeleted: includeDeleted)).ToList();
+            if(take == 0)
+            {
+                //set to default paging value from appsettings
+                take = Convert.ToInt32(_appsettings["DefaultPagingLimit"]);
+            }
+
+            try
+            {
+                var results = await _srsItemLevelService.GetAll(includeDeleted: includeDeleted, skip: skip, take: take);
+
+                return SuccessResponse(results.ToList());
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }            
         }
 
         // GET: api/SrsItemLevel/uid
         [HttpGet("{uid}")]
-        public async Task<ActionResult<SrsItemLevel>> GetSrsItemLevel(Guid uid, bool includeDeleted = false)
+        public async Task<ActionResult<SrsApiResponse>> GetSrsItemLevel(Guid uid, bool includeDeleted = false)
         {
-            var srsItemLevel = await _srsItemLevelService.GetByUID(uid, includeDeleted: includeDeleted);
-
-            if (srsItemLevel == null)
+            try
             {
-                return NotFound();
-            }
+                var srsItemLevel = await _srsItemLevelService.GetByUID(uid, includeDeleted: includeDeleted);
 
-            return srsItemLevel;
+                if (srsItemLevel == null)
+                {
+                    return NotFoundResponse();
+                }
+
+                return SuccessResponse(srsItemLevel);
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }
         }
 
         // PUT: api/SrsItemLevel/uid
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{uid}")]
-        public async Task<IActionResult> PutSrsItemLevel(Guid uid, SrsItemLevelPutModel srsItemLevelPutModel)
+        public async Task<ActionResult<SrsApiResponse>> PutSrsItemLevel(Guid uid, SrsItemLevelPutModel srsItemLevelPutModel)
         {
-            //for this endpoint, only let the user change the Name of the SrsItemLevel            
+            //for this endpoint, only let the user change the Name of the SrsItemLevel
+            //
+            SrsItemLevel dbSrsItemLevel = null;
 
-            var dbSrsItemLevel = await _srsItemLevelService.GetByUID(uid);
+            try
+            {
+                dbSrsItemLevel = await _srsItemLevelService.GetByUID(uid);
+            } 
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }
 
             if (srsItemLevelPutModel == null)
             {
-                return NotFound();
+                return NotFoundResponse();
             }
 
             if (dbSrsItemLevel.Name != srsItemLevelPutModel.Name) 
@@ -75,23 +109,28 @@ namespace SrsApi.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: error handling here
-                return StatusCode(500);
+                return ErrorResponseFromException(ex);
             }
 
-            return Ok();
+            return SuccessResponse(dbSrsItemLevel);
         }
 
         // POST: api/SrsItemLevel
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SrsItemLevel>> PostSrsItemLevel(SrsItemLevelPostModel srsItemLevelPostModel)
+        public async Task<ActionResult<SrsApiResponse>> PostSrsItemLevel(SrsItemLevelPostModel srsItemLevelPostModel)
         {
             //check to see if there already exists an SrsItemLevel with the POSTed level value
-
-            if((await _srsItemLevelService.GetAll(x=>x.Level == srsItemLevelPostModel.Level)).Any())
+            try
             {
-                return BadRequest("An SrsItemLevel with the level " + srsItemLevelPostModel.Level + " already exists.");
+                if ((await _srsItemLevelService.GetAll(x => x.Level == srsItemLevelPostModel.Level)).Any())
+                {
+                    return ErrorResponse("An SrsItemLevel with the level " + srsItemLevelPostModel.Level + " already exists.", System.Net.HttpStatusCode.BadRequest);
+                }
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
             }
 
             SrsItemLevel srsItemLevel = new SrsItemLevel
@@ -108,23 +147,29 @@ namespace SrsApi.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: error handling/logging here
-                return StatusCode(500);
-            }   
+                return ErrorResponseFromException(ex);
+            }
 
-            return CreatedAtAction("GetSrsItemLevel", new { uid = srsItemLevel.UID }, srsItemLevel);
+            return SuccessResponse(srsItemLevel);
         }
 
         // DELETE: api/SrsItemLevel/uid
         [HttpDelete("{uid}")]
-        public async Task<IActionResult> DeleteSrsItemLevel(Guid uid)
+        public async Task<ActionResult<SrsApiResponse>> DeleteSrsItemLevel(Guid uid)
         {
-            var srsItemLevel = await _srsItemLevelService.GetByUID(uid);
-
-            if (srsItemLevel == null)
+            try
             {
-                return NotFound();
-            }
+                var srsItemLevel = await _srsItemLevelService.GetByUID(uid);
+
+                if (srsItemLevel == null)
+                {
+                    return NotFoundResponse();
+                }
+            } 
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }            
 
             //TODO: if there are any SrsItems with this level, then don't allow the delete (need to create the SrsItemService first)
 
@@ -136,11 +181,10 @@ namespace SrsApi.Controllers
             }
             catch (Exception ex)
             {
-                //TODO: error handling/logging here
-                return StatusCode(500);
+                return ErrorResponseFromException(ex);
             }
 
-            return Ok();
+            return SuccessResponse();
         }
     }
 }

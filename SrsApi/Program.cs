@@ -5,6 +5,7 @@ using SrsApi.DbContext;
 using SrsApi.Interfaces;
 using SrsApi.Managers;
 using SrsApi.Services;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,8 @@ builder.Services.AddScoped<UserManager<IdentityUser>, SrsApiUserManager<Identity
 builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
+
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
 var app = builder.Build();
 
