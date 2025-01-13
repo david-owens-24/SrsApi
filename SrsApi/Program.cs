@@ -55,6 +55,7 @@ builder.Services.AddScoped<UserManager<IdentityUser>, SrsApiUserManager<Identity
 builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
+builder.Services.AddScoped<ISrsItemService, SrsItemService>();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
