@@ -5,6 +5,8 @@ namespace SrsApi.Classes.SrsItemController
     public class SrsItemPutModel
     {
         [Required]
-        public string Name { get; set; }
+        public Guid SrsItemLevelUID { get; set; }
+
+        public int Order { get; set; }
     }
 }

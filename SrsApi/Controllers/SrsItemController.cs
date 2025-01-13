@@ -86,56 +86,66 @@ namespace SrsApi.Controllers
             }
         }
 
-        //// PUT: api/SrsItem/uid
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{uid}")]
-        //public async Task<ActionResult<SrsApiResponse>> PutSrsItem(Guid uid, SrsItemPutModel srsItemPutModel)
-        //{
+        // PUT: api/SrsItem/uid
+        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [HttpPut("{uid}")]
+        public async Task<ActionResult<SrsApiResponse>> PutSrsItem(Guid uid, SrsItemPutModel srsItemPutModel)
+        {
+            SrsItem dbSrsItem = null;
 
-        //    SrsItem dbSrsItem = null;
+            try
+            {
+                dbSrsItem = await _srsItemService.GetByUID(uid, includes: [x=>x.Level]);
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }
 
-        //    try
-        //    {
-        //        dbSrsItem = await _srsItemService.GetByUID(uid);
-        //    } 
-        //    catch (Exception ex)
-        //    {
-        //        return ErrorResponseFromException(ex);
-        //    }
+            if (srsItemPutModel == null)
+            {
+                return NotFoundResponse();
+            }
 
-        //    if (srsItemPutModel == null)
-        //    {
-        //        return NotFoundResponse();
-        //    }
+            if (dbSrsItem.Order != srsItemPutModel.Order)
+            {
+                dbSrsItem.Order = srsItemPutModel.Order;
+            }
 
-        //    //TODO: add updates here
-        //    //if (dbSrsItemLevel.Name != srsItemLevelPutModel.Name) 
-        //    //{
-        //    //    dbSrsItemLevel.Name = srsItemLevelPutModel.Name;
-        //    //}
+            if (dbSrsItem.Level.UID != srsItemPutModel.SrsItemLevelUID)
+            {
+                var newLevel = await _srsItemLevelService.GetByUID(srsItemPutModel.SrsItemLevelUID);
 
-        //    try
-        //    {
-        //        await _srsItemService.Update(dbSrsItem);
+                if (newLevel == null)
+                {
+                    return ErrorResponse("An SrsItemLevel with the UID " + srsItemPutModel.SrsItemLevelUID + " was not found.", System.Net.HttpStatusCode.NotFound);
+                }
 
-        //        _srsItemService.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return ErrorResponseFromException(ex);
-        //    }
+                dbSrsItem.Level = newLevel;
+            }
 
-        //    return SuccessResponse(dbSrsItem);
-        //}
+            try
+            {
+                await _srsItemService.Update(dbSrsItem);
+
+                _srsItemService.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return ErrorResponseFromException(ex);
+            }
+
+            return SuccessResponse(dbSrsItem);
+        }
 
         // POST: api/SrsItem
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<SrsApiResponse>> PostSrsItemLevel(SrsItemPostModel srsItemPostModel)
+        public async Task<ActionResult<SrsApiResponse>> PostSrsItem(SrsItemPostModel srsItemPostModel)
         {
             //check that the provided SrsItemLevel exists
-
             SrsItemLevel itemLevel = null;
+
             try
             {
                 itemLevel = await _srsItemLevelService.GetByUID(srsItemPostModel.SrsItemLevelUID);
@@ -178,9 +188,9 @@ namespace SrsApi.Controllers
         {
             try
             {
-                var srsItemLevel = await _srsItemService.GetByUID(uid);
+                var srsItem = await _srsItemService.GetByUID(uid);
 
-                if (srsItemLevel == null)
+                if (srsItem == null)
                 {
                     return NotFoundResponse();
                 }
