@@ -91,7 +91,7 @@ namespace SrsApi.Controllers
                 return ErrorResponseFromException(ex);
             }
 
-            if (srsItemLevelPutModel == null)
+            if (dbSrsItemLevel == null)
             {
                 return NotFoundResponse();
             }
