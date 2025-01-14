@@ -9,7 +9,7 @@ namespace SrsApi.Services
 {
     //Adapted from https://robdotnet.medium.com/effortlessly-create-crud-apis-in-c-bcc759691a91
 
-    public class SrsItemService : BaseService<SrsItem>, ISrsItemService
+    public class SrsItemService : BaseService<SrsItem>, IBaseServiceWithIncludes<SrsItem>
     {
         protected ApplicationDbContext _context;
         protected DbSet<SrsItem> _dbSet;

@@ -55,7 +55,10 @@ builder.Services.AddScoped<UserManager<IdentityUser>, SrsApiUserManager<Identity
 builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
-builder.Services.AddScoped<ISrsItemService, SrsItemService>();
+builder.Services.AddScoped<IBaseServiceWithIncludes<SrsItem>, SrsItemService>();
+builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswer>, SrsAnswerService>();
+
+builder.Services.AddScoped<IFuzzySearchMethodService, FuzzySearchMethodService>();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 

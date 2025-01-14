@@ -22,11 +22,11 @@ namespace SrsApi.Controllers
     public class SrsItemController : BaseController
     {
         private readonly ApplicationDbContext _context;
-        private readonly ISrsItemService _srsItemService;
+        private readonly IBaseServiceWithIncludes<SrsItem> _srsItemService;
         private readonly IBaseService<SrsItemLevel> _srsItemLevelService;
         private readonly IConfiguration _appsettings;
 
-        public SrsItemController(ApplicationDbContext context, ISrsItemService srsItemService,  IConfiguration appsettings, IBaseService<SrsItemLevel> srsItemLevelService)
+        public SrsItemController(ApplicationDbContext context, IBaseServiceWithIncludes<SrsItem> srsItemService,  IConfiguration appsettings, IBaseService<SrsItemLevel> srsItemLevelService)
         {
             _context = context;
             _srsItemService = srsItemService;

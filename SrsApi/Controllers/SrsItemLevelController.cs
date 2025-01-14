@@ -21,10 +21,10 @@ namespace SrsApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBaseService<SrsItemLevel> _srsItemLevelService;
-        private readonly ISrsItemService _srsItemService;
+        private readonly IBaseServiceWithIncludes<SrsItem> _srsItemService;
         private readonly IConfiguration _appsettings;
 
-        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, ISrsItemService srsItemService, IConfiguration appsettings)
+        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, IBaseServiceWithIncludes<SrsItem> srsItemService, IConfiguration appsettings)
         {
             _context = context;
             _srsItemLevelService = srsItemLevelService;
