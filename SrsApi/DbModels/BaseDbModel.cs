@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace SrsApi.DbModels
 {
     public class BaseDbModel
     {
         [Key]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public virtual int Id { get; set; }
         public virtual Guid UID { get; set; }
         public virtual DateTime? Created { get; set; }
