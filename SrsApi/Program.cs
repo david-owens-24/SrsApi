@@ -4,6 +4,7 @@ using Microsoft.OpenApi.Models;
 using SrsApi.DbContext;
 using SrsApi.Interfaces;
 using SrsApi.Managers;
+using SrsApi.Middleware;
 using SrsApi.Services;
 using System.Configuration;
 
@@ -56,6 +57,7 @@ builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
 builder.Services.AddScoped<ISrsItemService, SrsItemService>();
+builder.Services.AddScoped<IErrorService, ErrorService>();
 
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 
@@ -81,6 +83,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

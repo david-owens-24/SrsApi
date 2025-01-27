@@ -19,6 +19,7 @@ namespace SrsApi.DbContext
         public DbSet<SrsFuzzySearchMethod> SrsFuzzySearchMethods { get; set; }
         public DbSet<SrsItem> SrsItems { get; set; }
         public DbSet<SrsItemLevel> SrsItemLevels { get; set; }
+        public DbSet<Error> Errors { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolutionService userResolutionService) :
