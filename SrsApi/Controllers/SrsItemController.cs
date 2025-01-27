@@ -38,8 +38,6 @@ namespace SrsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<SrsApiResponse>> GetSrsItems(int skip = 0, int take = 0, Guid? srsItemLevelUID = null, string includes = null, bool includeDeleted = false)
         {
-            throw new Exception("TEST");
-
             if(take == 0)
             {
                 //set to default paging value from appsettings
