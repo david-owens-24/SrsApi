@@ -35,6 +35,11 @@ namespace SrsApi.Services
         {
             int ratio = 0;
 
+            if (string.IsNullOrEmpty(userInput) || string.IsNullOrEmpty(compareString))
+            {
+                return 0;
+            }
+
             switch (fuzzySearchMethod)
             {
                 case FuzzySearchMethod.ExactMatch:
