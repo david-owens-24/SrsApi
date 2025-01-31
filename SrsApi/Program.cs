@@ -53,6 +53,7 @@ builder.Services.AddSwaggerGen(opt =>
 
 builder.Services.AddScoped<UserManager<IdentityUser>, SrsApiUserManager<IdentityUser>>();
 builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
+builder.Services.AddScoped<IFuzzyMatchingService, FuzzyMatchingService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
 builder.Services.AddScoped<ISrsItemService, SrsItemService>();
