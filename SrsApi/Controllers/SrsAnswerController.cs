@@ -42,7 +42,7 @@ namespace SrsApi.Controllers
 
         // GET: api/SrsAnswer
         [HttpGet]
-        public async Task<ActionResult<SrsApiResponse>> GetSrsAnswers(int skip = 0, int take = 0, bool includeDeleted = false)
+        public async Task<ActionResult<SrsApiResponse>> GetSrsAnswers(int skip = 0, int take = 0, string includes = null, bool includeDeleted = false)
         {
             if(take == 0)
             {
@@ -52,7 +52,7 @@ namespace SrsApi.Controllers
 
             try
             {
-                var results = await _srsAnswerService.GetAll(includeDeleted: includeDeleted, skip: skip, take: take);
+                var results = await _srsAnswerService.GetAll(includeDeleted: includeDeleted, includes: _srsAnswerService.GetIncludes(includes), skip: skip, take: take);
 
                 return SuccessResponse(results.ToList());
             }
@@ -64,11 +64,11 @@ namespace SrsApi.Controllers
 
         // GET: api/SrsAnswer/uid
         [HttpGet("{uid}")]
-        public async Task<ActionResult<SrsApiResponse>> GetSrsAnswer(Guid uid, bool includeDeleted = false)
+        public async Task<ActionResult<SrsApiResponse>> GetSrsAnswer(Guid uid, string includes = null, bool includeDeleted = false)
         {
             try
             {
-                var srsItemLevel = await _srsAnswerService.GetByUID(uid, includeDeleted: includeDeleted);
+                var srsItemLevel = await _srsAnswerService.GetByUID(uid, includes: _srsAnswerService.GetIncludes(includes), includeDeleted: includeDeleted);
 
                 if (srsItemLevel == null)
                 {
