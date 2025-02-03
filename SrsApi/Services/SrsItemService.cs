@@ -9,7 +9,7 @@ namespace SrsApi.Services
 {
     //Adapted from https://robdotnet.medium.com/effortlessly-create-crud-apis-in-c-bcc759691a91
 
-    public class SrsItemService : BaseService<SrsItem>, ISrsItemService
+    public class SrsItemService : BaseService<SrsItem>, IBaseServiceWithIncludes<SrsItem>
     {
         protected ApplicationDbContext _context;
         protected DbSet<SrsItem> _dbSet;
@@ -64,17 +64,22 @@ namespace SrsApi.Services
         /// <returns></returns>
         public new async Task<SrsItem> Add(SrsItem entity)
         {
-            var currentHighestOrder = _dbSet.Where(x => x.Deleted == null && x.Level.Id == entity.Level.Id).Max(x => x.Order);
+            var currentHighestOrder = _dbSet.Where(x => x.Deleted == null && x.Level.Id == entity.Level.Id)?.Max(x => (int?)x.Order);
+
+            if(currentHighestOrder == null)
+            {
+                currentHighestOrder = 0;
+            }
 
             //determine if we can just add this new SrsItem at the end
             //(i.e. Order unset, Order equals current max order, or the Order is greater than any existing order)
             if (entity.Order == 0 || entity.Order == currentHighestOrder || entity.Order > currentHighestOrder)
             {
-                entity.Order = currentHighestOrder + 1;
+                entity.Order = (int)currentHighestOrder + 1;
             }
             else
             {                
-                FixOrder(currentHighestOrder, entity.Level.Id);
+                FixOrder((int)currentHighestOrder, entity.Level.Id);
             }
 
             var addedEntity = (await _context.AddAsync(entity)).Entity;
