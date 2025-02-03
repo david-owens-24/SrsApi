@@ -57,7 +57,6 @@ builder.Services.AddScoped<IUserResolutionService, UserResolutionService>();
 builder.Services.AddScoped<IFuzzyMatchingService, FuzzyMatchingService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
-builder.Services.AddScoped<ISrsItemService, SrsItemService>();
 builder.Services.AddScoped<IErrorService, ErrorService>();
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsItem>, SrsItemService>();
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswer>, SrsAnswerService>();
