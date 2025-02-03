@@ -29,7 +29,7 @@ namespace SrsApi.Controllers
 
         public SrsAnswerController(ApplicationDbContext context, 
             IBaseServiceWithIncludes<SrsAnswer> srsAnswerService, 
-            IBaseServiceWithIncludes<SrsItem> srsItemService, 
+            IBaseServiceWithIncludes<SrsItem> srsItemService,
             IFuzzySearchMethodService fuzzySearchMethodService,
             IConfiguration appsettings)
         {
@@ -165,23 +165,22 @@ namespace SrsApi.Controllers
         {
             try
             {
-                var srsAnswer = await _srsAnswerService.GetByUID(uid);
+                var srsAnswer = await _srsAnswerService.GetByUID(uid, _srsAnswerService.GetIncludes(["SearchMethods"]));
 
                 if (srsAnswer == null)
                 {
                     return NotFoundResponse();
                 }
 
-                //TODO: cascade delete on SearchMethods
-            }
-            catch (Exception ex)
-            {
-                return ErrorResponseFromException(ex);
-            }
+                if(srsAnswer.SearchMethods != null)
+                {
+                    foreach (var searchMethod in srsAnswer.SearchMethods)
+                    {
+                        searchMethod.Deleted = DateTime.Now;
+                    }
+                }
 
-            try
-            {
-                _srsAnswerService.Delete(uid);
+                _srsAnswerService.Delete(srsAnswer.UID);
 
                 _srsAnswerService.SaveChanges();
             }
