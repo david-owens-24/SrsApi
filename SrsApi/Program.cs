@@ -58,9 +58,12 @@ builder.Services.AddScoped<IFuzzyMatchingService, FuzzyMatchingService>();
 
 builder.Services.AddScoped<IBaseService<SrsItemLevel>, BaseService<SrsItemLevel>>();
 builder.Services.AddScoped<IBaseService<SrsItemDetails>, BaseService<SrsItemDetails>>();
-builder.Services.AddScoped<IErrorService, ErrorService>();
+
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsItem>, SrsItemService>();
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswer>, SrsAnswerService>();
+builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswerFuzzySearchMethod>, BaseService<SrsAnswerFuzzySearchMethod>>();
+
+builder.Services.AddScoped<IErrorService, ErrorService>();
 
 builder.Services.AddScoped<IFuzzySearchMethodService, FuzzySearchMethodService>();
 
