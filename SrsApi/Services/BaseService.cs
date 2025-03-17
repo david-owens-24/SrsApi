@@ -44,6 +44,16 @@ namespace SrsApi.Services
             }
         }
 
+        public void Delete(Guid UID, DateTime deletedDateTime)
+        {
+            var entity = _dbSet.FirstOrDefault(x => x.UID == UID);
+
+            if (entity != null)
+            {
+                entity.Deleted = deletedDateTime;
+            }
+        }
+
         public async Task<IEnumerable<T>> GetAll(Expression<Func<T, bool>>? filter = null, Expression<Func<T, object>>[]? includes = null, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null, int? skip = null, int? take = null, bool includeDeleted = false)
         {
             IQueryable<T> query = _context.Set<T>();
