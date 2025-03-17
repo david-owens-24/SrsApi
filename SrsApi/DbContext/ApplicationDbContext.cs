@@ -18,6 +18,7 @@ namespace SrsApi.DbContext
         public DbSet<SrsAnswerFuzzySearchMethod> SrsAnswerFuzzySearchMethods { get; set; }
         public DbSet<SrsFuzzySearchMethod> SrsFuzzySearchMethods { get; set; }
         public DbSet<SrsItem> SrsItems { get; set; }
+        public DbSet<SrsItemDetails> SrsItemDetails { get; set; }
         public DbSet<SrsItemLevel> SrsItemLevels { get; set; }
         public DbSet<Error> Errors { get; set; }
 

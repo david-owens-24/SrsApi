@@ -10,6 +10,7 @@ namespace SrsApi.DbContext
         public virtual int Order { get; set; }
 
         public virtual SrsItemLevel Level { get; set; }
+        public virtual SrsItemDetails Details { get; set; }
 
         /// <summary>
         /// A list of potential answers for the SrsItem.
