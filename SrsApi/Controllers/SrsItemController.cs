@@ -186,9 +186,11 @@ namespace SrsApi.Controllers
         [HttpDelete("{uid}")]
         public async Task<ActionResult<SrsApiResponse>> DeleteSrsItem(Guid uid)
         {
+            SrsItem srsItem = null;
+
             try
             {
-                var srsItem = await _srsItemService.GetByUID(uid);
+                srsItem = await _srsItemService.GetByUID(uid, includes: _srsItemService.GetIncludes(["Details", "Answers"]));
 
                 if (srsItem == null)
                 {
@@ -202,7 +204,25 @@ namespace SrsApi.Controllers
 
             try
             {
-                _srsItemService.Delete(uid);
+                //cascade the delete for the Details and the Answers
+                DateTime now = DateTime.Now;                
+
+                if(srsItem.Details != null)
+                {
+                    srsItem.Details.Deleted = now;
+                }
+
+                if(srsItem.Answers != null)
+                {
+                    foreach (var answer in srsItem.Answers)
+                    {
+                        answer.Deleted = now;
+                    }
+                }
+
+                _srsItemService.Delete(uid, now);
+
+                await _srsItemService.Update(srsItem);
 
                 _srsItemService.SaveChanges();
             }

@@ -68,14 +68,14 @@ namespace SrsApi.Controllers
         {
             try
             {
-                var srsItemLevel = await _srsAnswerService.GetByUID(uid, includes: _srsAnswerService.GetIncludes(includes), includeDeleted: includeDeleted);
+                var srsAnswer = await _srsAnswerService.GetByUID(uid, includes: _srsAnswerService.GetIncludes(includes), includeDeleted: includeDeleted);
 
-                if (srsItemLevel == null)
+                if (srsAnswer == null)
                 {
                     return NotFoundResponse();
                 }
 
-                return SuccessResponse(srsItemLevel);
+                return SuccessResponse(srsAnswer);
             }
             catch (Exception ex)
             {
@@ -128,6 +128,13 @@ namespace SrsApi.Controllers
         [HttpPost]
         public async Task<ActionResult<SrsApiResponse>> PostSrsAnswer(SrsAnswerPostModel srsAnswerPostModel)
         {
+            var dbSrsItem = await _srsItemService.GetByUID(srsAnswerPostModel.SrsItemUID, _srsItemService.GetIncludes("Answers"));
+
+            if(dbSrsItem == null)
+            {
+                return NotFoundResponse();
+            }
+
             //could check if there's already an answer with the same AnswerText here, but is not unique at database level so is not incorrect to have dupes 
             SrsAnswer srsAnswer = new SrsAnswer
             {
@@ -145,11 +152,13 @@ namespace SrsApi.Controllers
                 });
             }
 
+            dbSrsItem.Answers.Add(srsAnswer);
+
             try
             {
-                await _srsAnswerService.Add(srsAnswer);
+                await _srsItemService.Update(dbSrsItem);
 
-                _srsAnswerService.SaveChanges();
+                _srsItemService.SaveChanges();
             }
             catch (Exception ex)
             {

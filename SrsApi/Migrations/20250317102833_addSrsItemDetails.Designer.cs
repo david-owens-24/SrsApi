@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SrsApi.DbContext;
 
@@ -11,9 +12,11 @@ using SrsApi.DbContext;
 namespace SrsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317102833_addSrsItemDetails")]
+    partial class addSrsItemDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -434,7 +437,7 @@ namespace SrsApi.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DetailsId")
+                    b.Property<int>("DetailsId")
                         .HasColumnType("int");
 
                     b.Property<int>("LevelId")
@@ -599,7 +602,9 @@ namespace SrsApi.Migrations
                 {
                     b.HasOne("SrsApi.DbContext.SrsItemDetails", "Details")
                         .WithMany()
-                        .HasForeignKey("DetailsId");
+                        .HasForeignKey("DetailsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("SrsApi.DbContext.SrsItemLevel", "Level")
                         .WithMany()

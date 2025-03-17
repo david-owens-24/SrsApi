@@ -51,6 +51,11 @@ namespace SrsApi.Services
                 includes.Add(x => x.Level);
             }
 
+            if (includesStrings.Any(x => x == "Details"))
+            {
+                includes.Add(x => x.Details);
+            }
+
             return includes.ToArray();
         }
 
