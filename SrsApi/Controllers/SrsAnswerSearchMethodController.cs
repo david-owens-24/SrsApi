@@ -125,6 +125,11 @@ namespace SrsApi.Controllers
                 return NotFoundResponse();
             }
 
+            if(dbSrsAnswer.SearchMethods == null)
+            {
+                dbSrsAnswer.SearchMethods = new List<SrsAnswerFuzzySearchMethod>();
+            }
+
             var newSearchMethod = new SrsAnswerFuzzySearchMethod
             {
                 MinumumAcceptedValue = (int)srsAnswerSearchMethodPostModel.MinumumAcceptedValue,
