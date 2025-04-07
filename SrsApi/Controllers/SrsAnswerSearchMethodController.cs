@@ -178,7 +178,7 @@ namespace SrsApi.Controllers
 
                 _srsAnswerFuzzySearchMethodService.Delete(uid);
 
-                _srsAnswerService.SaveChanges();
+                _srsAnswerFuzzySearchMethodService.SaveChanges();
             }
             catch (Exception ex)
             {
