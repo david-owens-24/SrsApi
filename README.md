@@ -10,6 +10,20 @@ Currently a work in progress.
 - Custom reviews with no time or level restrictions
 - Fuzzy matching on user input answers
 
+# Current progress:
+- Authorisation/User Handling via Identity
+  - Mostly done, still need to remove some default endpoints
+- Questions, Answers, and Categorisations all creatable and configurable via API endpoints
+  - Questions and Answers creatable, no Categorisations yet
+- Full, queryable history of all user-submitted answers and their progress through the system
+  - Not started
+- Structured/Ordered reviews with time and level restrictions
+  - Not started
+- Custom reviews with no time or level restrictions
+  - Not started
+- Fuzzy matching on user input answers
+  - Done
+
 # Overview
 
 Following online spaced repetition systems like https://www.wanikani.com/, this REST API will provide a system for tracking a user's progress through a long-form progression system for learning. The system will be set up with numerous Levels to progress through over time, each with their own sets of Questions and Answers.
