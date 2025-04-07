@@ -89,15 +89,23 @@ namespace SrsApi.Controllers
                 return NotFoundResponse();
             }
 
-            if (srsAnswerSearchMethodPutModel.FuzzySearchMethod != null && srsAnswerSearchMethodPutModel.FuzzySearchMethod != dbSrsSearchMethod.SearchMethod.FuzzySearchMethod) 
+            if(srsAnswerSearchMethodPutModel.SearchMethods == null || srsAnswerSearchMethodPutModel.SearchMethods.Count == 0)
             {
-                dbSrsSearchMethod.SearchMethod.FuzzySearchMethod = (FuzzySearchMethod)srsAnswerSearchMethodPutModel.FuzzySearchMethod;
+                return ErrorResponse("At least one SearchMethod must be provided.");
             }
 
-            if (srsAnswerSearchMethodPutModel.MinumumAcceptedValue != null && srsAnswerSearchMethodPutModel.MinumumAcceptedValue != dbSrsSearchMethod.MinumumAcceptedValue)
+            foreach (var searchMethod in srsAnswerSearchMethodPutModel.SearchMethods)
             {
-                dbSrsSearchMethod.MinumumAcceptedValue = (int)srsAnswerSearchMethodPutModel.MinumumAcceptedValue;
-            }
+                if (searchMethod.FuzzySearchMethod != null && searchMethod.FuzzySearchMethod != dbSrsSearchMethod.SearchMethod.FuzzySearchMethod)
+                {
+                    dbSrsSearchMethod.SearchMethod.FuzzySearchMethod = (FuzzySearchMethod)searchMethod.FuzzySearchMethod;
+                }
+
+                if (searchMethod.MinumumAcceptedValue != null && searchMethod.MinumumAcceptedValue != dbSrsSearchMethod.MinumumAcceptedValue)
+                {
+                    dbSrsSearchMethod.MinumumAcceptedValue = (int)searchMethod.MinumumAcceptedValue;
+                }
+            }            
 
             try
             {
@@ -130,13 +138,24 @@ namespace SrsApi.Controllers
                 dbSrsAnswer.SearchMethods = new List<SrsAnswerFuzzySearchMethod>();
             }
 
-            var newSearchMethod = new SrsAnswerFuzzySearchMethod
+            foreach (var searchMethod in srsAnswerSearchMethodPostModel.SearchMethods)
             {
-                MinumumAcceptedValue = (int)srsAnswerSearchMethodPostModel.MinumumAcceptedValue,
-                SearchMethod = await _fuzzySearchMethodService.Get((FuzzySearchMethod)srsAnswerSearchMethodPostModel.FuzzySearchMethod)
-            };
+                if(searchMethod.MinumumAcceptedValue != null && searchMethod.FuzzySearchMethod != null)
+                {
+                    var newSearchMethod = new SrsAnswerFuzzySearchMethod
+                    {
+                        MinumumAcceptedValue = (int)searchMethod.MinumumAcceptedValue,
+                        SearchMethod = await _fuzzySearchMethodService.Get((FuzzySearchMethod)searchMethod.FuzzySearchMethod)
+                    };
 
-            dbSrsAnswer.SearchMethods.Add(newSearchMethod);
+                    dbSrsAnswer.SearchMethods.Add(newSearchMethod);
+                }
+            }    
+            
+            if(dbSrsAnswer.SearchMethods.Count == 0)
+            {
+                return ErrorResponse("No valid SearchMethods were included.");
+            }
 
             try
             {
@@ -149,7 +168,7 @@ namespace SrsApi.Controllers
                 return ErrorResponseFromException(ex);
             }
 
-            return SuccessResponse(newSearchMethod);
+            return SuccessResponse(dbSrsAnswer.SearchMethods);
         }
 
         // DELETE: api/SrsAnswer/uid

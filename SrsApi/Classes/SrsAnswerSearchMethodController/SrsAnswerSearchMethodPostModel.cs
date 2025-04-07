@@ -1,4 +1,5 @@
-﻿using SrsApi.Enums;
+﻿using SrsApi.Classes.SrsAnswerSearchMethodController;
+using SrsApi.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace SrsApi.Classes.SrsItemLevelController
@@ -7,12 +8,7 @@ namespace SrsApi.Classes.SrsItemLevelController
     {
         [Required]
         public Guid SrsAnswerUID { get; set; }
-
-        [Required]
-        public int? MinumumAcceptedValue { get; set; }
-
-        [Required]
-        public FuzzySearchMethod? FuzzySearchMethod { get; set; }
+        public List<SrsAnswerSearchMethodItem> SearchMethods { get; set; }
 
     }
 }
