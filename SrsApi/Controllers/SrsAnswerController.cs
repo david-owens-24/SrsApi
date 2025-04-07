@@ -84,7 +84,7 @@ namespace SrsApi.Controllers
 
             try
             {
-                dbSrsAnswer = await _srsAnswerService.GetByUID(uid, _srsAnswerService.GetIncludes(["SearchMethods"]));
+                dbSrsAnswer = await _srsAnswerService.GetByUID(uid, _srsAnswerService.GetIncludes(new string[] { "SearchMethods" }));
             } 
             catch (Exception ex)
             {
