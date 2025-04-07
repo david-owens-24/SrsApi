@@ -6,7 +6,7 @@ namespace SrsApi.Classes.SrsAnswerSearchMethodController
     public class SrsAnswerSearchMethodItem
     {
         [Required]
-        public int? MinumumAcceptedValue { get; set; }
+        public int? MinimumAcceptedValue { get; set; }
 
         [Required]
         public FuzzySearchMethod? FuzzySearchMethod { get; set; }

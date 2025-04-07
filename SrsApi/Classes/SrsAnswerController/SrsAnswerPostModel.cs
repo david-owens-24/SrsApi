@@ -1,7 +1,7 @@
 ﻿using SrsApi.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace SrsApi.Classes.SrsItemLevelController
+namespace SrsApi.Classes.SrsAnswerController
 {
     public class SrsAnswerPostModel
     {
@@ -10,13 +10,13 @@ namespace SrsApi.Classes.SrsItemLevelController
 
         public string? AnswerText { get; set; }
 
-        public int? MinumumAcceptedValue { get; set; }
+        public int? MinimumAcceptedValue { get; set; }
 
         public FuzzySearchMethod? FuzzySearchMethod { get; set; }
 
         public bool HasSrsItemSearchMethod()
         {
-            if (!string.IsNullOrWhiteSpace(AnswerText) && MinumumAcceptedValue != null && FuzzySearchMethod != null)
+            if (!string.IsNullOrWhiteSpace(AnswerText) && MinimumAcceptedValue != null && FuzzySearchMethod != null)
             {
                 return true;
             }

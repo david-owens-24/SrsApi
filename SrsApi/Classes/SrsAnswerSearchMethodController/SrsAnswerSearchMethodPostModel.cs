@@ -2,7 +2,7 @@
 using SrsApi.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace SrsApi.Classes.SrsItemLevelController
+namespace SrsApi.Classes.SrsAnswerSearchMethodController
 {
     public class SrsAnswerSearchMethodPostModel
     {

@@ -7,7 +7,7 @@ namespace SrsApi.DbContext
         /// <summary>
         /// An integer that is the minimum acceptable value for an SrsItemAnswer to be considered correct.
         /// </summary>
-        public virtual int MinumumAcceptedValue { get; set; }
+        public virtual int MinimumAcceptedValue { get; set; }
 
         /// <summary>
         /// The search method that will be used.

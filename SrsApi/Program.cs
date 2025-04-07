@@ -61,7 +61,7 @@ builder.Services.AddScoped<IBaseService<SrsItemDetails>, BaseService<SrsItemDeta
 
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsItem>, SrsItemService>();
 builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswer>, SrsAnswerService>();
-builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswerFuzzySearchMethod>, IBaseServiceWithIncludes<SrsAnswerFuzzySearchMethod>>();
+builder.Services.AddScoped<IBaseServiceWithIncludes<SrsAnswerFuzzySearchMethod>, SrsAnswerFuzzySearchMethodService>();
 
 builder.Services.AddScoped<IErrorService, ErrorService>();
 

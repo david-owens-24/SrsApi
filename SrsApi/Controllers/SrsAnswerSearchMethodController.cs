@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SrsApi.Classes.ApiResponses;
-using SrsApi.Classes.SrsItemController;
-using SrsApi.Classes.SrsItemLevelController;
+using SrsApi.Classes.SrsAnswerSearchMethodController;
 using SrsApi.DbContext;
 using SrsApi.Enums;
 using SrsApi.Interfaces;
@@ -101,9 +93,9 @@ namespace SrsApi.Controllers
                     dbSrsSearchMethod.SearchMethod.FuzzySearchMethod = (FuzzySearchMethod)searchMethod.FuzzySearchMethod;
                 }
 
-                if (searchMethod.MinumumAcceptedValue != null && searchMethod.MinumumAcceptedValue != dbSrsSearchMethod.MinumumAcceptedValue)
+                if (searchMethod.MinimumAcceptedValue != null && searchMethod.MinimumAcceptedValue != dbSrsSearchMethod.MinimumAcceptedValue)
                 {
-                    dbSrsSearchMethod.MinumumAcceptedValue = (int)searchMethod.MinumumAcceptedValue;
+                    dbSrsSearchMethod.MinimumAcceptedValue = (int)searchMethod.MinimumAcceptedValue;
                 }
             }            
 
@@ -140,11 +132,11 @@ namespace SrsApi.Controllers
 
             foreach (var searchMethod in srsAnswerSearchMethodPostModel.SearchMethods)
             {
-                if(searchMethod.MinumumAcceptedValue != null && searchMethod.FuzzySearchMethod != null)
+                if(searchMethod.MinimumAcceptedValue != null && searchMethod.FuzzySearchMethod != null)
                 {
                     var newSearchMethod = new SrsAnswerFuzzySearchMethod
                     {
-                        MinumumAcceptedValue = (int)searchMethod.MinumumAcceptedValue,
+                        MinimumAcceptedValue = (int)searchMethod.MinimumAcceptedValue,
                         SearchMethod = await _fuzzySearchMethodService.Get((FuzzySearchMethod)searchMethod.FuzzySearchMethod)
                     };
 

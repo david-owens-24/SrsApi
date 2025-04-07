@@ -22,7 +22,7 @@ namespace SrsApi.Services
             {
                 int ratio = GetFuzzyMatchRatio(userInput, answer.AnswerText, searchMethod.SearchMethod.FuzzySearchMethod);
 
-                if (ratio >= searchMethod.MinumumAcceptedValue)
+                if (ratio >= searchMethod.MinimumAcceptedValue)
                 {
                     return true;
                 }
