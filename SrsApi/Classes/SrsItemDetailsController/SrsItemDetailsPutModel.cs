@@ -1,7 +1,7 @@
 ﻿using SrsApi.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace SrsApi.Classes.SrsItemLevelController
+namespace SrsApi.Classes.SrsItemDetailsController
 {
     public class SrsItemDetailsPutModel
     {

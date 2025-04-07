@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SrsApi.Classes.ApiResponses;
-using SrsApi.Classes.SrsItemController;
-using SrsApi.Classes.SrsItemLevelController;
+using SrsApi.Classes.SrsAnswerController;
 using SrsApi.DbContext;
 using SrsApi.Enums;
 using SrsApi.Interfaces;
@@ -147,7 +139,7 @@ namespace SrsApi.Controllers
 
                 srsAnswer.SearchMethods.Add(new SrsAnswerFuzzySearchMethod
                 {
-                    MinumumAcceptedValue = (int)srsAnswerPostModel.MinumumAcceptedValue,
+                    MinimumAcceptedValue = (int)srsAnswerPostModel.MinimumAcceptedValue,
                     SearchMethod = await _fuzzySearchMethodService.Get((FuzzySearchMethod)srsAnswerPostModel.FuzzySearchMethod)
                 });
             }

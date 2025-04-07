@@ -22,7 +22,6 @@ namespace SrsApi.DbContext
         public DbSet<SrsItemLevel> SrsItemLevels { get; set; }
         public DbSet<Error> Errors { get; set; }
 
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IUserResolutionService userResolutionService) :
             base(options)
         {
