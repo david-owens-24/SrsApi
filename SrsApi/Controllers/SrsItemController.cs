@@ -86,7 +86,7 @@ namespace SrsApi.Controllers
 
             try
             {
-                dbSrsItem = await _srsItemService.GetByUID(uid, includes: [x=>x.Level]);
+                dbSrsItem = await _srsItemService.GetByUID(uid, includes: new Expression<Func<SrsItem, object>>[] { x => x.Level });
             }
             catch (Exception ex)
             {
