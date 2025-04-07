@@ -166,7 +166,7 @@ namespace SrsApi.Controllers
         {
             try
             {
-                var srsAnswer = await _srsAnswerService.GetByUID(uid, _srsAnswerService.GetIncludes(["SearchMethods"]));
+                var srsAnswer = await _srsAnswerService.GetByUID(uid, _srsAnswerService.GetIncludes("SearchMethods"));
 
                 if (srsAnswer == null)
                 {
