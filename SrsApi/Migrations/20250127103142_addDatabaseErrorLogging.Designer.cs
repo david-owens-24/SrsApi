@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SrsApi.DbContext;
 
@@ -11,9 +12,11 @@ using SrsApi.DbContext;
 namespace SrsApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250127103142_addDatabaseErrorLogging")]
+    partial class addDatabaseErrorLogging
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -317,7 +320,7 @@ namespace SrsApi.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MinimumAcceptedValue")
+                    b.Property<int>("MinumumAcceptedValue")
                         .HasColumnType("int");
 
                     b.Property<int>("SearchMethodFuzzySearchMethod")
@@ -375,41 +378,21 @@ namespace SrsApi.Migrations
                         new
                         {
                             FuzzySearchMethod = 5,
-                            FuzzySearchMethodName = "PartialTokenSortRatio"
-                        },
-                        new
-                        {
-                            FuzzySearchMethod = 6,
                             FuzzySearchMethodName = "TokenSetRatio"
                         },
                         new
                         {
-                            FuzzySearchMethod = 7,
-                            FuzzySearchMethodName = "PartialTokenSetRatio"
-                        },
-                        new
-                        {
-                            FuzzySearchMethod = 8,
+                            FuzzySearchMethod = 6,
                             FuzzySearchMethodName = "TokenInitialismRatio"
                         },
                         new
                         {
-                            FuzzySearchMethod = 9,
-                            FuzzySearchMethodName = "PartialTokenInitialismRatio"
-                        },
-                        new
-                        {
-                            FuzzySearchMethod = 10,
+                            FuzzySearchMethod = 7,
                             FuzzySearchMethodName = "TokenAbbreviationRatio"
                         },
                         new
                         {
-                            FuzzySearchMethod = 11,
-                            FuzzySearchMethodName = "PartialTokenAbbreviationRatio"
-                        },
-                        new
-                        {
-                            FuzzySearchMethod = 12,
+                            FuzzySearchMethod = 8,
                             FuzzySearchMethodName = "WeightedRatio"
                         });
                 });
@@ -434,9 +417,6 @@ namespace SrsApi.Migrations
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DetailsId")
-                        .HasColumnType("int");
-
                     b.Property<int>("LevelId")
                         .HasColumnType("int");
 
@@ -448,43 +428,9 @@ namespace SrsApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DetailsId");
-
                     b.HasIndex("LevelId");
 
                     b.ToTable("SrsItems");
-                });
-
-            modelBuilder.Entity("SrsApi.DbContext.SrsItemDetails", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime?>("Deleted")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DeletedBy")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("UID")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("SrsItemDetails");
                 });
 
             modelBuilder.Entity("SrsApi.DbContext.SrsItemLevel", b =>
@@ -597,17 +543,11 @@ namespace SrsApi.Migrations
 
             modelBuilder.Entity("SrsApi.DbContext.SrsItem", b =>
                 {
-                    b.HasOne("SrsApi.DbContext.SrsItemDetails", "Details")
-                        .WithMany()
-                        .HasForeignKey("DetailsId");
-
                     b.HasOne("SrsApi.DbContext.SrsItemLevel", "Level")
                         .WithMany()
                         .HasForeignKey("LevelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Details");
 
                     b.Navigation("Level");
                 });

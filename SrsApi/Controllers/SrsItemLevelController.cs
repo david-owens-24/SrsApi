@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using SrsApi.Classes.ApiResponses;
 using SrsApi.Classes.SrsItemLevelController;
 using SrsApi.DbContext;
@@ -21,12 +14,14 @@ namespace SrsApi.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IBaseService<SrsItemLevel> _srsItemLevelService;
+        private readonly IBaseServiceWithIncludes<SrsItem> _srsItemService;
         private readonly IConfiguration _appsettings;
 
-        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, IConfiguration appsettings)
+        public SrsItemLevelController(ApplicationDbContext context, IBaseService<SrsItemLevel> srsItemLevelService, IBaseServiceWithIncludes<SrsItem> srsItemService, IConfiguration appsettings)
         {
             _context = context;
             _srsItemLevelService = srsItemLevelService;
+            _srsItemService = srsItemService;
             _appsettings = appsettings;
         }
 
@@ -91,7 +86,7 @@ namespace SrsApi.Controllers
                 return ErrorResponseFromException(ex);
             }
 
-            if (srsItemLevelPutModel == null)
+            if (dbSrsItemLevel == null)
             {
                 return NotFoundResponse();
             }
@@ -165,13 +160,16 @@ namespace SrsApi.Controllers
                 {
                     return NotFoundResponse();
                 }
+
+                if((await _srsItemService.GetAll(x=>x.Level.UID == uid, take: 1)).Any())
+                {
+                    return ErrorResponse("SrsItemLevel has existing SrsItems, these must be deleted before the SrsItemLevel can be deleted.", System.Net.HttpStatusCode.BadRequest);
+                }
             } 
             catch (Exception ex)
             {
                 return ErrorResponseFromException(ex);
-            }            
-
-            //TODO: if there are any SrsItems with this level, then don't allow the delete (need to create the SrsItemService first)
+            }
 
             try
             {
