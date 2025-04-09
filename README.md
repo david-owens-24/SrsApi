@@ -14,7 +14,7 @@ Currently a work in progress.
 - Authorisation/User Handling via Identity
   - Mostly done, still need to remove some default endpoints
 - Questions, Answers, and Categorisations all creatable and configurable via API endpoints
-  - Questions and Answers creatable, no Categorisations yet
+  - Mostly done, just need to add more details to the Questions
 - Full, queryable history of all user-submitted answers and their progress through the system
   - Not started
 - Structured/Ordered reviews with time and level restrictions
