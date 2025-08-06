@@ -4,6 +4,7 @@ using SrsApi.DbModels;
 using SrsApi.Interfaces;
 using System.Linq.Expressions;
 using System.Linq;
+using SrsApi.Services.Helpers;
 
 namespace SrsApi.Services
 {
@@ -22,31 +23,12 @@ namespace SrsApi.Services
 
         public Expression<Func<SrsAnswerFuzzySearchMethod, object>>[]? GetIncludes(string includesString)
         {
-            if (string.IsNullOrWhiteSpace(includesString))
-            {
-                return null;
-            }
-
-            var includes = includesString.Split(",").ToList();
-
-            return GetIncludes(includes);
+            return SrsAnswerFuzzySearchMethodIncludesHelper.GetIncludes(includesString);
         }
 
         public Expression<Func<SrsAnswerFuzzySearchMethod, object>>[]? GetIncludes(List<string> includesStrings)
         {
-            if (includesStrings == null)
-            {
-                return null;
-            }
-
-            var includes = new List<Expression<Func<SrsAnswerFuzzySearchMethod, object>>>();
-
-            if (includesStrings.Any(x => x == "SearchMethod"))
-            {
-                includes.Add(x => x.SearchMethod);
-            }
-
-            return includes.ToArray();
+            return SrsAnswerFuzzySearchMethodIncludesHelper.GetIncludes(includesStrings);
         }
     }
 }
